@@ -256,22 +256,34 @@ export const AuthorPortal: React.FC<Props> = ({
                         {getStatusBadge(b.status)}
                       </div>
 
-                      <div className="grid grid-cols-2 gap-2 text-xs font-mono pt-1 text-neutral-600">
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs font-mono pt-1 text-neutral-600">
                         <div>
                           <span className="text-neutral-400 text-[10px] block">ISBN:</span>
                           <span className="text-black font-medium">{b.isbn || 'Pending Allocation'}</span>
                         </div>
                         <div>
-                          <span className="text-neutral-400 text-[10px] block">Units Sold:</span>
+                          <span className="text-neutral-400 text-[10px] block">Genre:</span>
+                          <span className="text-black font-medium">{b.genre || 'General'}</span>
+                        </div>
+                        <div>
+                          <span className="text-neutral-400 text-[10px] block">MRP:</span>
+                          <span className="text-black font-medium">₹{b.mrp || b.price || 0}</span>
+                        </div>
+                        <div>
+                          <span className="text-neutral-400 text-[10px] block">Copies Sold:</span>
                           <span className="text-black font-medium">{b.totalCopiesSold || 0}</span>
                         </div>
                         <div>
-                          <span className="text-neutral-400 text-[10px] block">Cover Price:</span>
-                          <span className="text-black font-medium">₹{b.price || 0}</span>
+                          <span className="text-neutral-400 text-[10px] block">Royalty Earned:</span>
+                          <span className="text-black font-medium">₹{b.totalRoyaltyEarned || 0}</span>
                         </div>
                         <div>
-                          <span className="text-neutral-400 text-[10px] block">Pending Royalty:</span>
-                          <span className="text-black font-bold">₹{b.royaltyPending || 0}</span>
+                          <span className="text-neutral-400 text-[10px] block">Royalty Paid:</span>
+                          <span className="text-black font-medium">₹{b.royaltyPaid || 0}</span>
+                        </div>
+                        <div className="col-span-2 sm:col-span-3 pt-1 border-t border-neutral-100 flex justify-between items-center">
+                          <span className="text-neutral-400 text-[11px]">Royalty Pending:</span>
+                          <span className="text-black font-bold text-sm">₹{b.royaltyPending || 0}</span>
                         </div>
                       </div>
                     </div>
