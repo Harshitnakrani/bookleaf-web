@@ -132,7 +132,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#faf9f5] text-[#2b2b2b] font-sans">
+    <div className="min-h-screen flex flex-col bg-white text-neutral-900 font-sans">
       {/* Quick Test Persona Switcher Bar */}
       <DemoAccountSwitcher
         currentUser={currentUser}
@@ -217,19 +217,15 @@ export default function Home() {
         <KnowledgeBaseModal onClose={() => setIsKnowledgeBaseOpen(false)} />
       )}
 
-      {/* Editorial Footer */}
-      <footer className="bg-white border-t border-[#e5dfd3] py-8 px-4 text-center text-xs text-[#737373] space-y-2">
-        <div className="flex items-center justify-center gap-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#d4af37]" />
-          <p className="font-serif font-bold text-[#1b2a4a] text-sm">
-            BookLeaf Publishing &bull; Author Support &amp; Communication Operations Ledger
-          </p>
-          <span className="w-1.5 h-1.5 rounded-full bg-[#d4af37]" />
-        </div>
-        <p className="text-[11px] text-[#737373] max-w-2xl mx-auto">
-          Architected with NestJS, Next.js, Neon PostgreSQL, BullMQ Durable Queuing, Valkey TLS Caching, and Groq LLM Triage.
+      {/* Minimal Monochrome Footer */}
+      <footer className="bg-white border-t border-neutral-200 py-6 px-4 text-center text-xs text-neutral-500 font-mono space-y-1">
+        <p className="font-semibold text-black font-sans text-xs">
+          BookLeaf Publishing &bull; Author Support &amp; Communication Operations
         </p>
-        <p className="font-mono text-[10px] text-[#737373]">
+        <p className="text-[10px] text-neutral-400">
+          NestJS &bull; Next.js &bull; Neon PostgreSQL &bull; BullMQ &bull; Valkey TLS &bull; Groq LLM
+        </p>
+        <p className="text-[9px] text-neutral-400">
           &copy; {new Date().getFullYear()} BookLeaf Publishing. All rights reserved.
         </p>
       </footer>

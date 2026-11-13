@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { X, Send, Paperclip, BookOpen, AlertCircle, Sparkles, Feather, Check } from 'lucide-react';
+import { X, Send, Paperclip, AlertCircle, Check } from 'lucide-react';
 import { api } from '../lib/api';
 
 interface Props {
@@ -56,56 +56,51 @@ export const SubmitTicketModal: React.FC<Props> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#1b2a4a]/45 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-[#faf9f5] rounded-2xl border border-[#e5dfd3] shadow-2xl w-full max-w-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 z-50 bg-black/45 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto font-sans">
+      <div className="bg-white rounded-xs border border-neutral-300 shadow-xl w-full max-w-xl overflow-hidden animate-in fade-in zoom-in-95 duration-150">
         {/* Header */}
-        <div className="px-6 py-5 border-b border-[#e5dfd3] flex items-center justify-between bg-white">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#1b2a4a]/5 border border-[#1b2a4a]/10 flex items-center justify-center text-[#1b2a4a]">
-              <Feather className="w-5 h-5 text-[#d4af37]" />
-            </div>
-            <div>
-              <h3 className="text-base font-serif font-bold text-[#1b2a4a]">
-                Submit Author Inquiry
-              </h3>
-              <p className="text-xs text-[#737373]">
-                Direct correspondence to the BookLeaf Publishing operations team.
-              </p>
-            </div>
+        <div className="px-6 py-4 border-b border-neutral-200 flex items-center justify-between bg-white">
+          <div>
+            <h3 className="text-base font-bold text-black tracking-tight">
+              Submit Author Inquiry
+            </h3>
+            <p className="text-xs text-neutral-500 font-mono mt-0.5">
+              Direct dispatch to the BookLeaf operations queue.
+            </p>
           </div>
 
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full hover:bg-[#faf9f5] text-[#737373] hover:text-[#1b2a4a] border border-transparent hover:border-[#e5dfd3] flex items-center justify-center transition cursor-pointer"
+            className="w-7 h-7 border border-neutral-200 hover:border-black rounded-xs text-neutral-500 hover:text-black flex items-center justify-center transition cursor-pointer"
             aria-label="Close dialog"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Form Body */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="p-6 space-y-4 text-xs font-sans">
           {error && (
-            <div className="p-3.5 rounded-xl bg-[#8b263e]/10 border border-[#8b263e]/30 text-[#8b263e] text-xs flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 shrink-0" />
+            <div className="p-3 rounded-xs border border-black bg-neutral-100 text-black text-xs font-mono flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 shrink-0 text-black" />
               <span>{error}</span>
             </div>
           )}
 
-          {/* Book / Edition Selector */}
+          {/* Book Edition Selector */}
           <div>
-            <label className="block text-xs font-serif font-semibold text-[#1b2a4a] mb-1.5">
-              Associated Book Edition
+            <label className="block text-xs font-semibold text-black mb-1">
+              Associated Edition
             </label>
             <select
               value={bookId}
               onChange={(e) => setBookId(e.target.value)}
-              className="w-full p-2.5 bg-white border border-[#e5dfd3] rounded-xl text-xs text-[#2b2b2b] focus:outline-hidden focus:border-[#1b2a4a] cursor-pointer"
+              className="w-full p-2 bg-neutral-50 border border-neutral-300 rounded-xs text-xs text-black focus:outline-hidden focus:border-black cursor-pointer font-sans"
             >
               <option value="">General Account Inquiry (No Specific Book)</option>
               {books.map((b) => (
                 <option key={b.id} value={b.id}>
-                  {b.title} ({b.bookId}) &mdash; {b.status} &bull; ISBN: {b.isbn || 'Pending'}
+                  {b.title} [{b.bookId}] &bull; {b.status} &bull; ISBN: {b.isbn || 'Pending'}
                 </option>
               ))}
             </select>
@@ -113,42 +108,42 @@ export const SubmitTicketModal: React.FC<Props> = ({
 
           {/* Subject Line */}
           <div>
-            <label className="block text-xs font-serif font-semibold text-[#1b2a4a] mb-1.5">
-              Inquiry Subject *
+            <label className="block text-xs font-semibold text-black mb-1">
+              Subject *
             </label>
             <input
               type="text"
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
-              placeholder="e.g. Query regarding Q3 royalty distribution threshold"
-              className="w-full p-2.5 bg-white border border-[#e5dfd3] rounded-xl text-xs text-[#2b2b2b] placeholder-[#737373] focus:outline-hidden focus:border-[#1b2a4a]"
+              placeholder="e.g. Query regarding Q3 royalty distribution calculation"
+              className="w-full p-2 bg-neutral-50 border border-neutral-300 rounded-xs text-xs text-black placeholder-neutral-400 focus:outline-hidden focus:border-black font-sans"
               required
             />
           </div>
 
           {/* Detailed Description */}
           <div>
-            <label className="block text-xs font-serif font-semibold text-[#1b2a4a] mb-1.5">
-              Detailed Inquiry *
+            <label className="block text-xs font-semibold text-black mb-1">
+              Description *
             </label>
             <textarea
               rows={5}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Please provide full particulars. If reporting printing flaws or missing ISBN metadata, cite specific batch dates, retailers, or quantities."
-              className="w-full p-3 bg-white border border-[#e5dfd3] rounded-xl text-xs text-[#2b2b2b] placeholder-[#737373] focus:outline-hidden focus:border-[#1b2a4a]"
+              placeholder="Please provide full details. If reporting printing defects or metadata issues, cite dates, quantities, or order numbers."
+              className="w-full p-2.5 bg-neutral-50 border border-neutral-300 rounded-xs text-xs text-black placeholder-neutral-400 focus:outline-hidden focus:border-black font-sans leading-relaxed"
               required
             />
           </div>
 
           {/* Optional Attachment */}
           <div>
-            <label className="block text-xs font-serif font-semibold text-[#1b2a4a] mb-1.5">
-              Supporting Documentation (Photographs, Invoices, Proofs)
+            <label className="block text-xs font-semibold text-black mb-1">
+              Supporting Documentation (Optional)
             </label>
-            <div className="flex items-center gap-3">
-              <label className="px-3.5 py-2 rounded-xl border border-[#e5dfd3] bg-white hover:bg-[#faf9f5] text-xs font-medium text-[#2b2b2b] transition flex items-center gap-1.5 cursor-pointer shadow-2xs">
-                <Paperclip className="w-3.5 h-3.5 text-[#d4af37]" />
+            <div className="flex items-center gap-3 font-mono">
+              <label className="px-3 py-1.5 border border-neutral-300 hover:border-black rounded-xs text-xs text-black transition flex items-center gap-1.5 cursor-pointer bg-white">
+                <Paperclip className="w-3.5 h-3.5" />
                 <span>{attachmentName ? 'Replace File' : 'Attach File'}</span>
                 <input
                   type="file"
@@ -158,28 +153,27 @@ export const SubmitTicketModal: React.FC<Props> = ({
               </label>
 
               {attachmentName ? (
-                <span className="text-xs text-[#1e3a2b] font-mono font-medium truncate max-w-xs flex items-center gap-1">
+                <span className="text-xs text-black font-semibold truncate max-w-xs flex items-center gap-1">
                   <Check className="w-3.5 h-3.5" />
                   {attachmentName}
                 </span>
               ) : (
-                <span className="text-[11px] text-[#737373]">Optional (.pdf, .jpg, .png)</span>
+                <span className="text-[10px] text-neutral-400">PDF, JPG, or PNG</span>
               )}
             </div>
           </div>
 
-          {/* Submit Actions */}
-          <div className="pt-4 border-t border-[#e5dfd3] flex items-center justify-between">
-            <div className="flex items-center gap-1.5 text-[11px] text-[#737373]">
-              <Sparkles className="w-3.5 h-3.5 text-[#d4af37]" />
-              <span>Durable ingestion &bull; BullMQ async triage</span>
-            </div>
+          {/* Actions */}
+          <div className="pt-4 border-t border-neutral-200 flex items-center justify-between font-mono">
+            <span className="text-[10px] text-neutral-400">
+              Durable ingestion &bull; BullMQ triage
+            </span>
 
             <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 rounded-xl text-xs font-medium text-[#737373] hover:text-[#1b2a4a] hover:bg-white transition cursor-pointer"
+                className="px-3 py-1.5 text-xs text-neutral-500 hover:text-black uppercase cursor-pointer"
               >
                 Cancel
               </button>
@@ -187,10 +181,10 @@ export const SubmitTicketModal: React.FC<Props> = ({
               <button
                 type="submit"
                 disabled={submitting}
-                className="px-5 py-2.5 rounded-xl bg-[#1b2a4a] hover:bg-[#122844] text-white font-semibold text-xs shadow-xs transition flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                className="px-4 py-2 bg-black hover:bg-neutral-800 text-white font-mono text-xs uppercase tracking-wider rounded-xs transition flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
               >
                 <Send className="w-3.5 h-3.5" />
-                <span>{submitting ? 'Dispatching...' : 'Dispatch Inquiry'}</span>
+                <span>{submitting ? 'Submitting...' : 'Dispatch Inquiry'}</span>
               </button>
             </div>
           </div>

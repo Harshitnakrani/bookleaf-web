@@ -5,16 +5,12 @@ import {
   BookOpen,
   DollarSign,
   Clock,
-  CheckCircle,
+  Check,
   AlertCircle,
-  PlusCircle,
+  Plus,
   MessageSquare,
-  Building,
-  Layers,
   ChevronRight,
-  Sparkles,
-  Feather,
-  TrendingUp,
+  ArrowRight,
 } from 'lucide-react';
 
 interface Props {
@@ -42,25 +38,25 @@ export const AuthorPortal: React.FC<Props> = ({
     switch (status) {
       case 'Published & Live':
         return (
-          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#f2f9f4] text-[#15803d] border border-[#cbe8d5]">
+          <span className="px-2 py-0.5 rounded-xs text-[10px] font-mono uppercase tracking-wider bg-black text-white">
             Published &amp; Live
           </span>
         );
       case 'In Production - Cover Design':
         return (
-          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#fef8ee] text-[#b4691b] border border-[#fae2c0]">
-            In Production &bull; Cover Design
+          <span className="px-2 py-0.5 rounded-xs text-[10px] font-mono uppercase tracking-wider border border-neutral-400 text-neutral-800 bg-neutral-100">
+            Production &bull; Cover Design
           </span>
         );
       case 'In Production - Typesetting':
         return (
-          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#f0f4f8] text-[#0f2537] border border-[#d2deeb]">
-            In Production &bull; Typesetting
+          <span className="px-2 py-0.5 rounded-xs text-[10px] font-mono uppercase tracking-wider border border-neutral-400 text-neutral-800 bg-neutral-100">
+            Production &bull; Typesetting
           </span>
         );
       default:
         return (
-          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-slate-100 text-slate-700 border border-slate-200">
+          <span className="px-2 py-0.5 rounded-xs text-[10px] font-mono uppercase tracking-wider border border-neutral-300 text-neutral-600">
             {status}
           </span>
         );
@@ -71,25 +67,25 @@ export const AuthorPortal: React.FC<Props> = ({
     switch (status) {
       case 'OPEN':
         return (
-          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#f0f4f8] text-[#0f2537] border border-[#d2deeb]">
+          <span className="px-2 py-0.5 rounded-xs text-[10px] font-mono uppercase font-bold tracking-wider bg-black text-white">
             Open
           </span>
         );
       case 'IN_PROGRESS':
         return (
-          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#fef8ee] text-[#b4691b] border border-[#fae2c0]">
+          <span className="px-2 py-0.5 rounded-xs text-[10px] font-mono uppercase font-semibold tracking-wider border border-neutral-400 text-neutral-800 bg-neutral-100">
             In Progress
           </span>
         );
       case 'RESOLVED':
         return (
-          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#f2f9f4] text-[#15803d] border border-[#cbe8d5]">
+          <span className="px-2 py-0.5 rounded-xs text-[10px] font-mono uppercase font-semibold tracking-wider border border-neutral-300 text-neutral-700">
             Resolved
           </span>
         );
       case 'CLOSED':
         return (
-          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#f3f1eb] text-[#6b7280] border border-[#e7e5df]">
+          <span className="px-2 py-0.5 rounded-xs text-[10px] font-mono uppercase tracking-wider text-neutral-400 border border-neutral-200">
             Closed
           </span>
         );
@@ -102,24 +98,24 @@ export const AuthorPortal: React.FC<Props> = ({
   const thresholdPercent = Math.min(100, Math.round((pendingAmount / 1000) * 100));
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 bg-[#faf9f5]">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 bg-white font-sans text-neutral-900">
       {/* Author Dossier Banner */}
-      <div className="bg-white rounded-3xl border border-[#e7e5df] p-6 sm:p-7 shadow-paper flex flex-wrap items-center justify-between gap-6">
-        <div className="flex items-center gap-5">
-          <div className="w-16 h-16 rounded-2xl bg-[#0f2537] text-[#d49b55] border-2 border-[#d49b55]/40 flex items-center justify-center font-serif font-bold text-2xl shadow-sm">
+      <div className="bg-white border border-neutral-200 p-6 rounded-xs flex flex-wrap items-center justify-between gap-6">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 bg-black text-white flex items-center justify-center font-mono font-bold text-lg rounded-xs">
             {authorProfile?.name?.charAt(0) || 'A'}
           </div>
           <div>
-            <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-serif font-bold text-[#111827]">
+            <div className="flex items-center gap-2.5">
+              <h1 className="text-xl font-bold tracking-tight text-black">
                 {authorProfile?.name || 'Author Workspace'}
               </h1>
-              <span className="font-mono text-xs px-2.5 py-0.5 rounded bg-[#f3f1eb] text-[#374151] font-semibold border border-[#e7e5df]">
-                {authorProfile?.authorId || 'AUTH'}
+              <span className="font-mono text-[11px] px-2 py-0.5 bg-neutral-100 border border-neutral-300 text-neutral-800 rounded-xs font-semibold">
+                [{authorProfile?.authorId || 'AUTH'}]
               </span>
             </div>
-            <p className="text-xs text-[#6b7280] mt-1 font-sans">
-              {authorProfile?.email} &bull; {authorProfile?.city || 'India'} &bull; Author Since{' '}
+            <p className="text-xs text-neutral-500 mt-1 font-mono">
+              {authorProfile?.email} &bull; {authorProfile?.city || 'India'} &bull; Joined{' '}
               {authorProfile?.joinedDate
                 ? new Date(authorProfile.joinedDate).toLocaleDateString('en-US', {
                     month: 'short',
@@ -133,265 +129,211 @@ export const AuthorPortal: React.FC<Props> = ({
         {/* Banking Status & Query Action */}
         <div className="flex flex-wrap items-center gap-3">
           {authorProfile?.isBankDetailsLinked ? (
-            <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#f2f9f4] border border-[#cbe8d5] text-[#15803d] text-xs font-medium">
-              <CheckCircle className="w-4 h-4 text-[#15803d]" />
-              <div>
-                <span className="font-semibold block leading-tight">Bank Linked &bull; Direct Transfer</span>
-                <span className="text-[10px] opacity-80 font-mono">
-                  {authorProfile?.bankAccountNumber ? `••••${authorProfile.bankAccountNumber.slice(-4)}` : 'HDFC Bank'}
-                </span>
-              </div>
+            <div className="flex items-center gap-2 px-3 py-1.5 border border-neutral-300 bg-neutral-50 text-neutral-800 text-xs rounded-xs font-mono">
+              <Check className="w-3.5 h-3.5 text-black" />
+              <span>Bank Linked: Direct Payout (HDFC)</span>
             </div>
           ) : (
-            <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#fef8ee] border border-[#fae2c0] text-[#b4691b] text-xs font-medium">
-              <AlertCircle className="w-4 h-4 text-[#b4691b]" />
-              <div>
-                <span className="font-semibold block leading-tight">Bank Details Pending</span>
-                <span className="text-[10px] opacity-80">Required for quarterly disbursement</span>
-              </div>
+            <div className="flex items-center gap-2 px-3 py-1.5 border border-neutral-400 bg-neutral-100 text-neutral-900 text-xs rounded-xs font-mono">
+              <AlertCircle className="w-3.5 h-3.5" />
+              <span>Bank Details Pending</span>
             </div>
           )}
 
           <button
             onClick={onOpenSubmitModal}
-            className="px-5 py-2.5 rounded-xl bg-[#0f2537] hover:bg-[#16324f] text-white text-xs font-bold uppercase tracking-wider shadow-sm transition flex items-center gap-2 cursor-pointer"
+            className="px-4 py-2 bg-black hover:bg-neutral-800 text-white text-xs font-mono uppercase tracking-wider rounded-xs transition flex items-center gap-1.5 cursor-pointer"
           >
-            <PlusCircle className="w-4 h-4 text-[#d49b55]" />
-            <span>Submit Query</span>
+            <Plus className="w-3.5 h-3.5" />
+            <span>New Support Query</span>
           </button>
         </div>
       </div>
 
-      {/* Official Publisher Statement & Royalty Ledger */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Copies Sold */}
-        <div className="bg-white rounded-2xl border border-[#e7e5df] p-5 shadow-paper space-y-1">
-          <div className="flex items-center justify-between text-[#6b7280]">
-            <span className="text-[10px] font-mono font-bold uppercase tracking-widest">Total Distributed</span>
-            <BookOpen className="w-4 h-4 text-[#6b7280]" />
-          </div>
-          <div className="text-3xl font-serif font-bold text-[#111827]">
-            {summary?.totalCopiesSold?.toLocaleString() || 0}
-          </div>
-          <p className="text-[11px] text-[#6b7280]">Print &amp; digital copies sold</p>
+      {/* Financial Statement & Royalties */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono">
+        <div className="p-4 bg-neutral-50 border border-neutral-200 rounded-xs">
+          <span className="text-[10px] uppercase text-neutral-400 block">Catalog Volume</span>
+          <span className="text-2xl font-bold text-black mt-0.5 block">
+            {summary?.totalBooksCount || books.length} <span className="text-xs font-normal text-neutral-500">Editions</span>
+          </span>
+          <span className="text-[11px] text-neutral-500 mt-1 block">
+            {summary?.totalCopiesSold || 0} lifetime units sold
+          </span>
         </div>
 
-        {/* Total Royalty Earned */}
-        <div className="bg-white rounded-2xl border border-[#e7e5df] p-5 shadow-paper space-y-1">
-          <div className="flex items-center justify-between text-[#6b7280]">
-            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#15803d]">Total Royalty (80%)</span>
-            <TrendingUp className="w-4 h-4 text-[#15803d]" />
-          </div>
-          <div className="text-3xl font-serif font-bold text-[#15803d]">
-            ₹{summary?.totalRoyaltyEarned?.toLocaleString() || 0}
-          </div>
-          <p className="text-[11px] text-[#6b7280]">80/20 net profit author split</p>
+        <div className="p-4 bg-neutral-50 border border-neutral-200 rounded-xs">
+          <span className="text-[10px] uppercase text-neutral-400 block">Royalty Model</span>
+          <span className="text-2xl font-bold text-black mt-0.5 block">80% Net</span>
+          <span className="text-[11px] text-neutral-500 mt-1 block">
+            Paid quarterly &bull; Contract terms guaranteed
+          </span>
         </div>
 
-        {/* Royalty Paid */}
-        <div className="bg-white rounded-2xl border border-[#e7e5df] p-5 shadow-paper space-y-1">
-          <div className="flex items-center justify-between text-[#6b7280]">
-            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#0f2537]">Disbursed Payouts</span>
-            <CheckCircle className="w-4 h-4 text-[#0f2537]" />
+        <div className="p-4 bg-neutral-50 border border-neutral-200 rounded-xs">
+          <div className="flex justify-between items-start">
+            <span className="text-[10px] uppercase text-neutral-400 block">Pending Payout</span>
+            <span className="text-[10px] uppercase font-bold text-neutral-800">
+              {pendingAmount >= 1000 ? '[ELIGIBLE]' : '[ACCUMULATING]'}
+            </span>
           </div>
-          <div className="text-3xl font-serif font-bold text-[#0f2537]">
-            ₹{summary?.totalRoyaltyPaid?.toLocaleString() || 0}
-          </div>
-          <p className="text-[11px] text-[#6b7280]">Settled via bank transfer</p>
-        </div>
-
-        {/* Royalty Pending & Threshold Progress */}
-        <div className="bg-[#fef8ee] rounded-2xl border border-[#fae2c0] p-5 shadow-paper space-y-2">
-          <div className="flex items-center justify-between text-[#b4691b]">
-            <span className="text-[10px] font-mono font-bold uppercase tracking-widest">Pending Payout</span>
-            <Clock className="w-4 h-4" />
-          </div>
-          <div className="text-3xl font-serif font-bold text-[#92400e]">
-            ₹{pendingAmount.toLocaleString()}
-          </div>
-          {/* Progress bar towards ₹1,000 threshold */}
-          <div className="space-y-1">
-            <div className="w-full bg-[#fae2c0] h-1.5 rounded-full overflow-hidden">
+          <span className="text-2xl font-bold text-black mt-0.5 block">
+            ₹{pendingAmount.toLocaleString('en-IN')}
+          </span>
+          {/* Minimalist Threshold Bar */}
+          <div className="mt-2 space-y-1">
+            <div className="w-full bg-neutral-200 h-1.5 rounded-xs overflow-hidden">
               <div
-                className="bg-[#b4691b] h-full rounded-full transition-all duration-500"
+                className="bg-black h-full transition-all duration-300"
                 style={{ width: `${thresholdPercent}%` }}
-              ></div>
+              />
             </div>
-            <p className="text-[10px] text-[#92400e] flex justify-between font-mono">
-              <span>{thresholdPercent >= 100 ? 'Threshold met (disburses Q end)' : 'Rollover towards ₹1,000 floor'}</span>
-              <span>{thresholdPercent}%</span>
-            </p>
+            <div className="flex justify-between text-[10px] text-neutral-500">
+              <span>Threshold: ₹1,000</span>
+              <span>{thresholdPercent}% achieved</span>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Navigation Tabs */}
-      <div className="flex border-b border-[#e7e5df] gap-8">
-        <button
-          onClick={() => setActiveTab('books')}
-          className={`pb-3 text-sm font-serif font-bold transition cursor-pointer flex items-center gap-2 ${
-            activeTab === 'books'
-              ? 'text-[#0f2537] border-b-2 border-[#0f2537]'
-              : 'text-[#6b7280] hover:text-[#111827]'
-          }`}
-        >
-          <BookOpen className="w-4 h-4 text-[#b4691b]" />
-          <span>My Published Works &amp; Titles ({books.length})</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab('tickets')}
-          className={`pb-3 text-sm font-serif font-bold transition cursor-pointer flex items-center gap-2 ${
-            activeTab === 'tickets'
-              ? 'text-[#0f2537] border-b-2 border-[#0f2537]'
-              : 'text-[#6b7280] hover:text-[#111827]'
-          }`}
-        >
-          <MessageSquare className="w-4 h-4 text-[#15803d]" />
-          <span>Support Inquiries &amp; Dispatches ({tickets.length})</span>
-        </button>
-      </div>
-
-      {/* Tab 1: Book Catalog (Literary Card Aesthetics) */}
-      {activeTab === 'books' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {books.map((book) => (
-            <div
-              key={book.id}
-              className="bg-white rounded-2xl border border-[#e7e5df] p-6 shadow-paper shadow-paper-hover transition space-y-4 book-spine-effect"
-            >
-              <div className="flex justify-between items-start gap-4 pl-3">
-                <div className="space-y-1">
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#6b7280]">
-                    {book.bookId} &bull; {book.genre}
-                  </span>
-                  <h3 className="text-xl font-serif font-bold text-[#111827] leading-tight">
-                    {book.title}
-                  </h3>
-                  <p className="text-xs text-[#6b7280] font-mono">
-                    ISBN: {book.isbn || 'Pending Allocation'}
-                  </p>
-                </div>
-                <div>{getStatusBadge(book.status)}</div>
-              </div>
-
-              {/* Financial Ledger Section */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 py-3 border-y border-[#f3f1eb] text-xs bg-[#faf9f5]/50 rounded-xl px-4">
-                <div>
-                  <span className="text-[#6b7280] block text-[10px] uppercase font-mono">Retail MRP</span>
-                  <span className="font-semibold text-[#111827] font-mono">
-                    {book.mrp ? `₹${book.mrp}` : '—'}
-                  </span>
-                </div>
-                <div>
-                  <span className="text-[#6b7280] block text-[10px] uppercase font-mono">Royalty/Copy</span>
-                  <span className="font-semibold text-[#111827] font-mono">
-                    {book.authorRoyaltyPerCopy ? `₹${book.authorRoyaltyPerCopy}` : '—'}
-                  </span>
-                </div>
-                <div>
-                  <span className="text-[#6b7280] block text-[10px] uppercase font-mono">Copies Sold</span>
-                  <span className="font-bold text-[#111827] font-mono">
-                    {book.totalCopiesSold || 0}
-                  </span>
-                </div>
-                <div>
-                  <span className="text-[#6b7280] block text-[10px] uppercase font-mono">Pending</span>
-                  <span className="font-bold text-[#b4691b] font-mono">
-                    ₹{book.royaltyPending || 0}
-                  </span>
-                </div>
-              </div>
-
-              {/* Production and Distribution Channels */}
-              <div className="flex flex-wrap items-center justify-between text-xs text-[#6b7280] pt-1 pl-3">
-                <div className="flex items-center gap-1.5 font-medium">
-                  <Building className="w-3.5 h-3.5 text-[#b4691b]" />
-                  <span>Print Partner: {book.printPartner || 'In-House (Delhi)'}</span>
-                </div>
-
-                <div className="flex flex-wrap gap-1.5">
-                  {book.availableOn && book.availableOn.length > 0 ? (
-                    book.availableOn.map((ch: string) => (
-                      <span
-                        key={ch}
-                        className="px-2 py-0.5 rounded bg-[#f3f1eb] text-[#374151] text-[10px] font-medium border border-[#e7e5df]"
-                      >
-                        {ch}
-                      </span>
-                    ))
-                  ) : (
-                    <span className="text-[10px] text-[#6b7280] italic">Distribution setup in queue</span>
-                  )}
-                </div>
-              </div>
-            </div>
-          ))}
+      {/* Tabs */}
+      <div className="space-y-4">
+        <div className="border-b border-neutral-200 flex items-center gap-4 text-xs font-mono uppercase tracking-wider">
+          <button
+            onClick={() => setActiveTab('books')}
+            className={`pb-2.5 transition border-b-2 cursor-pointer ${
+              activeTab === 'books'
+                ? 'border-black text-black font-bold'
+                : 'border-transparent text-neutral-400 hover:text-black'
+            }`}
+          >
+            Published Titles ({books.length})
+          </button>
+          <button
+            onClick={() => setActiveTab('tickets')}
+            className={`pb-2.5 transition border-b-2 cursor-pointer ${
+              activeTab === 'tickets'
+                ? 'border-black text-black font-bold'
+                : 'border-transparent text-neutral-400 hover:text-black'
+            }`}
+          >
+            Inquiry Ledger ({tickets.length})
+          </button>
         </div>
-      )}
 
-      {/* Tab 2: My Tickets */}
-      {activeTab === 'tickets' && (
-        <div className="space-y-4">
-          {tickets.length === 0 ? (
-            <div className="bg-white rounded-3xl border border-[#e7e5df] p-12 text-center space-y-3 shadow-paper">
-              <MessageSquare className="w-10 h-10 text-[#d6d3cb] mx-auto" />
-              <h3 className="text-lg font-serif font-bold text-[#111827]">No Active Tickets</h3>
-              <p className="text-xs text-[#6b7280] max-w-sm mx-auto">
-                Need guidance regarding your manuscript milestone, ISBN, quarterly payout, or author copies?
-              </p>
-              <button
-                onClick={onOpenSubmitModal}
-                className="mt-2 px-5 py-2.5 rounded-xl bg-[#0f2537] text-white text-xs font-bold uppercase tracking-wider shadow-sm cursor-pointer"
-              >
-                Submit Inquiries
-              </button>
-            </div>
-          ) : (
-            <div className="bg-white rounded-3xl border border-[#e7e5df] overflow-hidden shadow-paper divide-y divide-[#f3f1eb]">
-              {tickets.map((t) => (
-                <div
-                  key={t.id}
-                  onClick={() => onSelectTicket(t)}
-                  className="p-5 sm:p-6 hover:bg-[#faf9f5] transition cursor-pointer flex items-center justify-between gap-4"
-                >
-                  <div className="space-y-1.5 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="font-mono text-xs font-bold text-[#111827] px-2 py-0.5 rounded bg-[#f3f1eb] border border-[#e7e5df]">
-                        {t.ticketNumber}
-                      </span>
-                      {getTicketStatusBadge(t.status)}
-                      <span className="text-[10px] uppercase font-mono tracking-wider font-semibold px-2 py-0.5 rounded bg-[#faf9f5] text-[#374151] border border-[#e7e5df]">
-                        {t.category?.replace(/_/g, ' ')}
-                      </span>
+        {/* Tab 1: Books */}
+        {activeTab === 'books' && (
+          <div className="space-y-3">
+            {books.length === 0 ? (
+              <div className="p-12 text-center border border-neutral-200 rounded-xs font-mono text-xs text-neutral-400">
+                No titles registered under this author profile.
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {books.map((b) => (
+                  <div
+                    key={b.id}
+                    className="p-5 border border-neutral-200 hover:border-black rounded-xs transition bg-white space-y-3 flex flex-col justify-between"
+                  >
+                    <div className="space-y-2">
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <span className="font-mono text-[10px] text-neutral-400">
+                            [{b.bookId}]
+                          </span>
+                          <h3 className="text-base font-bold text-black tracking-tight">
+                            {b.title}
+                          </h3>
+                        </div>
+                        {getStatusBadge(b.status)}
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2 text-xs font-mono pt-1">
+                        <div>
+                          <span className="text-neutral-400 text-[10px] block">ISBN:</span>
+                          <span className="text-black font-medium">{b.isbn || 'Pending Allocation'}</span>
+                        </div>
+                        <div>
+                          <span className="text-neutral-400 text-[10px] block">Units Sold:</span>
+                          <span className="text-black font-medium">{b.totalCopiesSold || 0}</span>
+                        </div>
+                        <div>
+                          <span className="text-neutral-400 text-[10px] block">Price:</span>
+                          <span className="text-black font-medium">₹{b.price || 0}</span>
+                        </div>
+                        <div>
+                          <span className="text-neutral-400 text-[10px] block">Accrued Royalty:</span>
+                          <span className="text-black font-bold">₹{b.royaltyPending || 0}</span>
+                        </div>
+                      </div>
                     </div>
 
-                    <h4 className="text-sm font-serif font-bold text-[#111827] truncate">
-                      {t.subject}
-                    </h4>
-
-                    <p className="text-xs text-[#4b5563] line-clamp-1">
-                      {t.description}
-                    </p>
-
-                    <div className="text-[11px] text-[#6b7280] flex items-center gap-3">
-                      <span>{new Date(t.createdAt).toLocaleDateString()}</span>
-                      {t.book?.title && (
-                        <span>&bull; Title: <em>{t.book.title}</em></span>
-                      )}
-                      {t._count?.messages > 0 && (
-                        <span className="text-[#15803d] font-semibold">&bull; {t._count.messages} reply(s)</span>
-                      )}
+                    <div className="pt-3 border-t border-neutral-100 flex items-center justify-between text-xs font-mono">
+                      <span className="text-neutral-400 text-[10px]">
+                        Pub Date: {b.publishedDate ? new Date(b.publishedDate).toLocaleDateString() : 'In Queue'}
+                      </span>
+                      <button
+                        onClick={onOpenSubmitModal}
+                        className="text-black hover:underline text-[11px] font-semibold flex items-center gap-1 cursor-pointer"
+                      >
+                        <span>Query about this edition</span>
+                        <ArrowRight className="w-3 h-3" />
+                      </button>
                     </div>
                   </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
-                  <ChevronRight className="w-5 h-5 text-[#9ca3af] shrink-0" />
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
+        {/* Tab 2: Tickets */}
+        {activeTab === 'tickets' && (
+          <div className="border border-neutral-200 rounded-xs overflow-hidden">
+            {tickets.length === 0 ? (
+              <div className="p-12 text-center font-mono text-xs text-neutral-400">
+                No active support queries found. Click &ldquo;New Support Query&rdquo; to submit a ticket.
+              </div>
+            ) : (
+              <div className="divide-y divide-neutral-200 font-sans text-xs">
+                {tickets.map((t) => (
+                  <div
+                    key={t.id}
+                    onClick={() => onSelectTicket(t)}
+                    className="p-4 hover:bg-neutral-50 transition cursor-pointer flex flex-wrap items-center justify-between gap-4"
+                  >
+                    <div className="space-y-1 max-w-xl">
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono text-xs font-bold text-black">
+                          {t.ticketNumber}
+                        </span>
+                        {getTicketStatusBadge(t.status)}
+                        <span className="font-mono text-[10px] text-neutral-400">
+                          &bull; {t.category?.replace(/_/g, ' ')}
+                        </span>
+                      </div>
+                      <h4 className="text-sm font-semibold text-black">
+                        {t.subject}
+                      </h4>
+                      <p className="text-neutral-500 text-xs line-clamp-1">
+                        {t.description}
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-4">
+                      <div className="text-right text-[11px] font-mono text-neutral-400 hidden sm:block">
+                        <div>{new Date(t.createdAt).toLocaleDateString()}</div>
+                        <div>{t.messages?.length || 0} replies</div>
+                      </div>
+                      <ChevronRight className="w-4 h-4 text-neutral-400" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
