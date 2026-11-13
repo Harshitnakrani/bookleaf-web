@@ -217,17 +217,9 @@ export default function Home() {
         <KnowledgeBaseModal onClose={() => setIsKnowledgeBaseOpen(false)} />
       )}
 
-      {/* Minimal Monochrome Footer */}
-      <footer className="bg-white border-t border-neutral-200 py-6 px-4 text-center text-xs text-neutral-500 font-mono space-y-1">
-        <p className="font-semibold text-black font-sans text-xs">
-          BookLeaf Publishing &bull; Author Support &amp; Communication Operations
-        </p>
-        <p className="text-[10px] text-neutral-400">
-          NestJS &bull; Next.js &bull; Neon PostgreSQL &bull; BullMQ &bull; Valkey TLS &bull; Groq LLM
-        </p>
-        <p className="text-[9px] text-neutral-400">
-          &copy; {new Date().getFullYear()} BookLeaf Publishing. All rights reserved.
-        </p>
+      {/* Super Minimal Footer */}
+      <footer className="bg-white border-t border-neutral-100 py-6 px-4 text-center font-mono text-[11px] text-neutral-400">
+        <div>BookLeaf Publishing &bull; Author Support Operations</div>
       </footer>
     </div>
   );
