@@ -1,11 +1,11 @@
 'use client';
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { DemoAccountSwitcher } from '../components/DemoAccountSwitcher';
 import { Navbar } from '../components/Navbar';
 import { LandingPage } from '../components/LandingPage';
 import { AuthorPortal } from '../components/AuthorPortal';
 import { AdminPortal } from '../components/AdminPortal';
+import { AuthModal } from '../components/AuthModal';
 import { TicketDetailModal } from '../components/TicketDetailModal';
 import { SubmitTicketModal } from '../components/SubmitTicketModal';
 import { KnowledgeBaseModal } from '../components/KnowledgeBaseModal';
@@ -22,6 +22,10 @@ export default function Home() {
   const [currentUser, setCurrentUser] = useState<any | null>(null);
   const [currentTab, setCurrentTab] = useState<'landing' | 'author' | 'admin'>('landing');
 
+  // Auth Modal State
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authModalRole, setAuthModalRole] = useState<'ADMIN' | 'AUTHOR' | undefined>(undefined);
+
   // Author Data
   const [books, setBooks] = useState<any[]>([]);
   const [booksSummary, setBooksSummary] = useState<any | null>(null);
@@ -35,7 +39,7 @@ export default function Home() {
   const [isKnowledgeBaseOpen, setIsKnowledgeBaseOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Initialize Auth State from LocalStorage
+  // Initialize Auth State strictly from localStorage (if user was previously authenticated)
   useEffect(() => {
     const user = getStoredUser();
     const token = getStoredToken();
@@ -46,6 +50,8 @@ export default function Home() {
       } else {
         setCurrentTab('author');
       }
+    } else {
+      setCurrentTab('landing');
     }
   }, []);
 
@@ -56,11 +62,9 @@ export default function Home() {
       setIsLoading(true);
 
       if (currentUser.role === 'ADMIN') {
-        // Admin gets all queue tickets
         const tRes = await api.getTickets();
         setTickets(tRes.data || []);
       } else {
-        // Author gets their books, summary, and submitted tickets
         const [booksRes, sumRes, tRes] = await Promise.all([
           api.getMyBooks().catch(() => []),
           api.getMyBooksSummary().catch(() => null),
@@ -85,7 +89,6 @@ export default function Home() {
   const handleRealtimeEvent = useCallback(
     (event: string, data: any) => {
       console.log('⚡ Real-time event received:', event, data);
-      // Refresh tickets in background when event occurs
       refreshData();
     },
     [refreshData],
@@ -96,28 +99,13 @@ export default function Home() {
     currentUser?.role === 'ADMIN' ? 'role:ADMIN' : `author:${currentUser?.id}`,
   );
 
-  // Quick Persona Selector Handler
-  const handleSelectPersona = async (email: string) => {
-    try {
-      setIsLoading(true);
-      const res = await api.login({
-        email,
-        password: 'Password123!',
-      });
-
-      setStoredToken(res.accessToken);
-      setStoredUser(res.user);
-      setCurrentUser(res.user);
-
-      if (res.user.role === 'ADMIN') {
-        setCurrentTab('admin');
-      } else {
-        setCurrentTab('author');
-      }
-    } catch (err: any) {
-      alert(err.message || 'Login failed');
-    } finally {
-      setIsLoading(false);
+  // Handle successful login from AuthModal
+  const handleLoginSuccess = (user: any) => {
+    setCurrentUser(user);
+    if (user.role === 'ADMIN') {
+      setCurrentTab('admin');
+    } else {
+      setCurrentTab('author');
     }
   };
 
@@ -131,49 +119,45 @@ export default function Home() {
     setCurrentTab('landing');
   };
 
-  return (
-    <div className="min-h-screen flex flex-col bg-white text-neutral-900 font-sans">
-      {/* Quick Test Persona Switcher Bar */}
-      <DemoAccountSwitcher
-        currentUser={currentUser}
-        onSelectPersona={handleSelectPersona}
-        onLogout={handleLogout}
-        isLoading={isLoading}
-      />
+  const handleOpenLogin = (role?: 'ADMIN' | 'AUTHOR') => {
+    setAuthModalRole(role);
+    setIsAuthModalOpen(true);
+  };
 
-      {/* Main Navigation Bar */}
+  const handleTabChange = (tab: 'landing' | 'author' | 'admin') => {
+    if (!currentUser && (tab === 'author' || tab === 'admin')) {
+      handleOpenLogin(tab === 'admin' ? 'ADMIN' : 'AUTHOR');
+      return;
+    }
+    setCurrentTab(tab);
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col bg-white text-neutral-900 font-sans selection:bg-black selection:text-white">
+      {/* Floating Modern Navbar */}
       <Navbar
         currentTab={currentTab}
-        onChangeTab={(tab) => {
-          if (tab === 'author' && currentUser?.role === 'ADMIN') {
-            // Auto switch to Priya Sharma if admin clicks author portal
-            handleSelectPersona('priya.sharma@email.com');
-            return;
-          }
-          if (tab === 'admin' && currentUser?.role !== 'ADMIN') {
-            // Auto switch to Ops Admin if author clicks admin portal
-            handleSelectPersona('admin@bookleaf.pub');
-            return;
-          }
-          setCurrentTab(tab);
-        }}
+        onChangeTab={handleTabChange}
         currentUser={currentUser}
+        onOpenLogin={handleOpenLogin}
+        onLogout={handleLogout}
         onOpenKnowledgeBase={() => setIsKnowledgeBaseOpen(true)}
         isRealtimeConnected={isRealtimeConnected}
       />
 
-      {/* Main Page Content */}
+      {/* Main Dynamically Rendered Page Content */}
       <main className="flex-1">
+        {/* Public Landing Website (Default for unauthenticated users, or when clicking Overview) */}
         {currentTab === 'landing' && (
           <LandingPage
-            onSelectPersona={handleSelectPersona}
-            onChangeTab={(t) => setCurrentTab(t)}
+            onOpenLogin={handleOpenLogin}
             onOpenKnowledgeBase={() => setIsKnowledgeBaseOpen(true)}
             isLoading={isLoading}
           />
         )}
 
-        {currentTab === 'author' && (
+        {/* Dynamic Author Studio Dashboard (Only accessible when logged in as AUTHOR) */}
+        {currentTab === 'author' && currentUser?.role === 'AUTHOR' && (
           <AuthorPortal
             authorProfile={currentUser}
             books={books}
@@ -185,7 +169,8 @@ export default function Home() {
           />
         )}
 
-        {currentTab === 'admin' && (
+        {/* Dynamic Admin Operations Dashboard (Only accessible when logged in as ADMIN) */}
+        {currentTab === 'admin' && currentUser?.role === 'ADMIN' && (
           <AdminPortal
             tickets={tickets}
             onSelectTicket={(t) => setSelectedTicketId(t.id)}
@@ -195,7 +180,15 @@ export default function Home() {
         )}
       </main>
 
-      {/* Modals & Drawers */}
+      {/* Real Production Auth Modal with Email & Password */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        onLoginSuccess={handleLoginSuccess}
+        initialRole={authModalRole}
+      />
+
+      {/* Interactive Modals */}
       {selectedTicketId && (
         <TicketDetailModal
           ticketId={selectedTicketId}
@@ -217,9 +210,36 @@ export default function Home() {
         <KnowledgeBaseModal onClose={() => setIsKnowledgeBaseOpen(false)} />
       )}
 
-      {/* Super Minimal Footer */}
-      <footer className="bg-white border-t border-neutral-100 py-6 px-4 text-center font-mono text-[11px] text-neutral-400">
-        <div>BookLeaf Publishing &bull; Author Support Operations</div>
+      {/* Modern Minimal Production Footer */}
+      <footer className="bg-white border-t border-neutral-200 py-10 px-4 sm:px-6 lg:px-8 text-neutral-500 font-sans text-xs">
+        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+          <div className="space-y-1">
+            <div className="font-bold text-neutral-900 text-sm">
+              BookLeaf Publishing
+            </div>
+            <p className="text-neutral-400 text-xs">
+              Author Support &amp; Publishing Operations Architecture.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-6 font-mono text-[11px] text-neutral-400">
+            <span>NestJS</span>
+            <span>&bull;</span>
+            <span>Next.js 16</span>
+            <span>&bull;</span>
+            <span>Neon PostgreSQL</span>
+            <span>&bull;</span>
+            <span>BullMQ</span>
+            <span>&bull;</span>
+            <span>Valkey TLS</span>
+            <span>&bull;</span>
+            <span>Groq LLM</span>
+          </div>
+
+          <div className="text-[11px] text-neutral-400 font-mono">
+            &copy; {new Date().getFullYear()} BookLeaf Publishing. All rights reserved.
+          </div>
+        </div>
       </footer>
     </div>
   );

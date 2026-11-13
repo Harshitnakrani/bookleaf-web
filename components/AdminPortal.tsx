@@ -1,7 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { RefreshCw, Search } from 'lucide-react';
+import { RefreshCw, Search, ArrowUpDown, Shield, AlertTriangle, CheckCircle, Clock } from 'lucide-react';
+import { CardSpotlight } from './ui/card-spotlight';
+import { BackgroundDots } from './ui/background-grid';
 
 interface Props {
   tickets: any[];
@@ -64,160 +66,217 @@ export const AdminPortal: React.FC<Props> = ({
   const totalResolved = tickets.filter((t) => t.status === 'RESOLVED' || t.status === 'CLOSED').length;
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 space-y-8 text-neutral-900 font-sans">
-      {/* Top Header & Backlog Counts */}
-      <div className="space-y-2 pb-6 border-b border-neutral-100">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <h1 className="text-xl font-bold tracking-tight text-black">
-            Operations Triage Ledger
-          </h1>
+    <div className="w-full bg-white text-neutral-900 font-sans pb-24">
+      {/* Ops Desk Header Banner with BackgroundDots */}
+      <BackgroundDots className="border-b border-neutral-200 py-10 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+          <div className="space-y-1">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-neutral-100 border border-neutral-200 text-neutral-800 text-[10px] font-mono uppercase tracking-wider">
+              <Shield className="w-3 h-3 text-neutral-700" />
+              <span>Operations Command</span>
+            </div>
+            <h1 className="text-2xl font-bold tracking-tight text-neutral-900">
+              Publishing Support &amp; Triage Ledger
+            </h1>
+            <p className="text-xs text-neutral-500 font-mono">
+              Live BullMQ queue worker monitoring, Groq AI classifications, and Valkey draft cache.
+            </p>
+          </div>
 
           <button
             onClick={onRefresh}
             disabled={isLoading}
-            className="text-xs font-mono text-neutral-500 hover:text-black transition cursor-pointer flex items-center gap-1.5 disabled:opacity-50"
+            className="px-4 py-2 border border-neutral-200 hover:border-black rounded-xl bg-white text-xs font-mono uppercase tracking-wider text-neutral-900 transition flex items-center gap-2 cursor-pointer shadow-xs disabled:opacity-50"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} />
-            <span>Refresh</span>
+            <span>Refresh Queue</span>
           </button>
         </div>
+      </BackgroundDots>
 
-        <div className="flex flex-wrap gap-x-6 gap-y-1 font-mono text-xs text-neutral-500">
-          <div><span className="text-black font-semibold">{totalOpen}</span> open</div>
-          <div><span className="text-black font-semibold">{totalUrgent}</span> urgent</div>
-          <div><span className="text-black font-semibold">{totalInProgress}</span> in progress</div>
-          <div><span className="text-black font-semibold">{totalResolved}</span> resolved</div>
+      {/* Main Body */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-8">
+        {/* Metric Spotlight Cards */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 font-mono">
+          <CardSpotlight className="p-4">
+            <span className="text-[10px] uppercase text-neutral-400 block font-mono">Open Backlog</span>
+            <span className="text-3xl font-bold text-black mt-0.5 block">{totalOpen}</span>
+            <span className="text-[10px] text-neutral-500 font-sans">Requires triage action</span>
+          </CardSpotlight>
+
+          <CardSpotlight className="p-4">
+            <span className="text-[10px] uppercase text-neutral-400 block font-mono">High / Critical Urgency</span>
+            <span className="text-3xl font-bold text-black mt-0.5 block">{totalUrgent}</span>
+            <span className="text-[10px] text-neutral-500 font-sans">Prioritized dispatch</span>
+          </CardSpotlight>
+
+          <CardSpotlight className="p-4">
+            <span className="text-[10px] uppercase text-neutral-400 block font-mono">Under Review</span>
+            <span className="text-3xl font-bold text-black mt-0.5 block">{totalInProgress}</span>
+            <span className="text-[10px] text-neutral-500 font-sans">In-progress thread</span>
+          </CardSpotlight>
+
+          <CardSpotlight className="p-4">
+            <span className="text-[10px] uppercase text-neutral-400 block font-mono">Resolved / Closed</span>
+            <span className="text-3xl font-bold text-black mt-0.5 block">{totalResolved}</span>
+            <span className="text-[10px] text-neutral-500 font-sans">Resolved inquiries</span>
+          </CardSpotlight>
         </div>
-      </div>
 
-      {/* Filter and Search Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
-        <div className="flex items-center gap-2 flex-1 min-w-[200px]">
-          <Search className="w-3.5 h-3.5 text-neutral-400 shrink-0" />
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search tickets, authors, editions..."
-            className="w-full border-b border-neutral-200 py-1 text-xs text-black placeholder-neutral-400 focus:outline-hidden focus:border-black font-sans"
-          />
-        </div>
-
-        <div className="flex flex-wrap items-center gap-3">
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="border-b border-neutral-200 py-1 text-xs text-neutral-700 bg-transparent focus:outline-hidden focus:border-black cursor-pointer"
-          >
-            <option value="ALL">Status: All</option>
-            <option value="OPEN">Open</option>
-            <option value="IN_PROGRESS">In Progress</option>
-            <option value="RESOLVED">Resolved</option>
-            <option value="CLOSED">Closed</option>
-          </select>
-
-          <select
-            value={priorityFilter}
-            onChange={(e) => setPriorityFilter(e.target.value)}
-            className="border-b border-neutral-200 py-1 text-xs text-neutral-700 bg-transparent focus:outline-hidden focus:border-black cursor-pointer"
-          >
-            <option value="ALL">Priority: All</option>
-            <option value="CRITICAL">Critical</option>
-            <option value="HIGH">High</option>
-            <option value="MEDIUM">Medium</option>
-            <option value="LOW">Low</option>
-          </select>
-
-          <select
-            value={categoryFilter}
-            onChange={(e) => setCategoryFilter(e.target.value)}
-            className="border-b border-neutral-200 py-1 text-xs text-neutral-700 bg-transparent focus:outline-hidden focus:border-black cursor-pointer max-w-[140px] truncate"
-          >
-            <option value="ALL">Category: All</option>
-            <option value="ROYALTY_AND_PAYMENTS">Royalty &amp; Payments</option>
-            <option value="ISBN_AND_METADATA_ISSUES">ISBN &amp; Metadata</option>
-            <option value="PRINTING_AND_QUALITY">Printing &amp; Quality</option>
-            <option value="DISTRIBUTION_AND_AVAILABILITY">Distribution</option>
-            <option value="BOOK_STATUS_AND_PRODUCTION_UPDATES">Production Updates</option>
-            <option value="GENERAL_INQUIRY">General Inquiry</option>
-          </select>
-
-          <button
-            onClick={() => setSortByUrgency(!sortByUrgency)}
-            className={`transition cursor-pointer ${
-              sortByUrgency ? 'text-black font-semibold' : 'text-neutral-400 hover:text-black'
-            }`}
-          >
-            {sortByUrgency ? 'Urgency Sorted' : 'Date Sorted'}
-          </button>
-        </div>
-      </div>
-
-      {/* Flat Ledger Table */}
-      <div className="overflow-x-auto">
-        {sortedTickets.length === 0 ? (
-          <div className="py-12 text-center text-xs font-mono text-neutral-400">
-            No matching inquiries in queue.
+        {/* Filter and Search Bar */}
+        <div className="flex flex-wrap items-center justify-between gap-3 p-3 bg-neutral-50 border border-neutral-200 rounded-2xl text-xs font-mono shadow-xs">
+          <div className="flex flex-1 items-center gap-2 min-w-[240px]">
+            <Search className="w-4 h-4 text-neutral-400 shrink-0" />
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search ticket #, subject, author, or book..."
+              className="w-full bg-white border border-neutral-200 rounded-xl px-3 py-1.5 text-xs text-black placeholder-neutral-400 focus:outline-hidden focus:border-black font-sans"
+            />
           </div>
-        ) : (
-          <table className="w-full text-left text-xs font-sans">
-            <thead className="border-b border-neutral-100 font-mono text-[10px] text-neutral-400 uppercase tracking-wider">
-              <tr>
-                <th className="py-2 pr-4 font-normal">ID</th>
-                <th className="py-2 pr-4 font-normal">Author</th>
-                <th className="py-2 pr-4 font-normal">Inquiry</th>
-                <th className="py-2 pr-4 font-normal">Category</th>
-                <th className="py-2 pr-4 font-normal">Priority</th>
-                <th className="py-2 pr-4 font-normal">Status</th>
-                <th className="py-2 text-right font-normal">Action</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-neutral-100">
-              {sortedTickets.map((t) => (
-                <tr
-                  key={t.id}
-                  onClick={() => onSelectTicket(t)}
-                  className="hover:bg-neutral-50 transition cursor-pointer"
-                >
-                  <td className="py-3 pr-4 font-mono font-bold text-black whitespace-nowrap">
-                    {t.ticketNumber}
-                  </td>
 
-                  <td className="py-3 pr-4 whitespace-nowrap">
-                    <span className="font-semibold text-black">{t.author?.name}</span>
-                    <span className="text-[10px] font-mono text-neutral-400 block">
-                      {t.book?.title ? t.book.title : t.author?.authorId || 'General'}
-                    </span>
-                  </td>
+          <div className="flex flex-wrap items-center gap-2">
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="bg-white border border-neutral-200 rounded-xl px-2.5 py-1.5 text-xs text-black cursor-pointer font-sans"
+            >
+              <option value="ALL">Status: All</option>
+              <option value="OPEN">Open</option>
+              <option value="IN_PROGRESS">In Progress</option>
+              <option value="RESOLVED">Resolved</option>
+              <option value="CLOSED">Closed</option>
+            </select>
 
-                  <td className="py-3 pr-4 max-w-xs sm:max-w-sm">
-                    <div className="font-medium text-black line-clamp-1">{t.subject}</div>
-                    <div className="text-[11px] text-neutral-500 line-clamp-1">{t.description}</div>
-                  </td>
+            <select
+              value={priorityFilter}
+              onChange={(e) => setPriorityFilter(e.target.value)}
+              className="bg-white border border-neutral-200 rounded-xl px-2.5 py-1.5 text-xs text-black cursor-pointer font-sans"
+            >
+              <option value="ALL">Priority: All</option>
+              <option value="CRITICAL">Critical</option>
+              <option value="HIGH">High</option>
+              <option value="MEDIUM">Medium</option>
+              <option value="LOW">Low</option>
+            </select>
 
-                  <td className="py-3 pr-4 font-mono text-[10px] text-neutral-600 whitespace-nowrap">
-                    {t.category?.replace(/_/g, ' ')}
-                  </td>
+            <select
+              value={categoryFilter}
+              onChange={(e) => setCategoryFilter(e.target.value)}
+              className="bg-white border border-neutral-200 rounded-xl px-2.5 py-1.5 text-xs text-black cursor-pointer max-w-[150px] truncate font-sans"
+            >
+              <option value="ALL">Category: All</option>
+              <option value="ROYALTY_AND_PAYMENTS">Royalty &amp; Payments</option>
+              <option value="ISBN_AND_METADATA_ISSUES">ISBN &amp; Metadata</option>
+              <option value="PRINTING_AND_QUALITY">Printing &amp; Quality</option>
+              <option value="DISTRIBUTION_AND_AVAILABILITY">Distribution</option>
+              <option value="BOOK_STATUS_AND_PRODUCTION_UPDATES">Production Updates</option>
+              <option value="GENERAL_INQUIRY">General Inquiry</option>
+            </select>
 
-                  <td className="py-3 pr-4 font-mono text-[10px] whitespace-nowrap">
-                    <span className={t.priority === 'CRITICAL' ? 'font-bold text-black underline' : t.priority === 'HIGH' ? 'font-semibold text-black' : 'text-neutral-500'}>
-                      {t.priority}
-                    </span>
-                    {t.isPriorityOverridden && <span className="text-neutral-400 ml-0.5">*</span>}
-                  </td>
+            <button
+              onClick={() => setSortByUrgency(!sortByUrgency)}
+              className={`px-3 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
+                sortByUrgency
+                  ? 'bg-black text-white font-semibold'
+                  : 'bg-white border border-neutral-200 text-neutral-700 hover:border-black'
+              }`}
+            >
+              <ArrowUpDown className="w-3 h-3" />
+              <span>{sortByUrgency ? 'Urgency Sorted' : 'Date Sorted'}</span>
+            </button>
+          </div>
+        </div>
 
-                  <td className="py-3 pr-4 font-mono text-[10px] text-neutral-600 whitespace-nowrap uppercase">
-                    {t.status}
-                  </td>
+        {/* Ledger Table */}
+        <div className="border border-neutral-200 rounded-2xl overflow-hidden bg-white shadow-xs">
+          {sortedTickets.length === 0 ? (
+            <div className="p-12 text-center text-xs font-mono text-neutral-400">
+              No inquiries found in this queue slice.
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs font-sans">
+                <thead className="bg-neutral-50 border-b border-neutral-200 font-mono text-[10px] text-neutral-400 uppercase tracking-wider">
+                  <tr>
+                    <th className="py-3 px-4 font-normal">Ticket</th>
+                    <th className="py-3 px-4 font-normal">Author &amp; Edition</th>
+                    <th className="py-3 px-4 font-normal">Query Summary</th>
+                    <th className="py-3 px-4 font-normal">Category</th>
+                    <th className="py-3 px-4 font-normal">Priority</th>
+                    <th className="py-3 px-4 font-normal">Status</th>
+                    <th className="py-3 px-4 text-right font-normal">Action</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-neutral-100">
+                  {sortedTickets.map((t) => (
+                    <tr
+                      key={t.id}
+                      onClick={() => onSelectTicket(t)}
+                      className="hover:bg-neutral-50 transition cursor-pointer"
+                    >
+                      <td className="py-3.5 px-4 font-mono font-bold text-black whitespace-nowrap">
+                        {t.ticketNumber}
+                      </td>
 
-                  <td className="py-3 text-right font-mono text-[11px] text-neutral-400 hover:text-black whitespace-nowrap">
-                    Open &rarr;
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+                      <td className="py-3.5 px-4 whitespace-nowrap">
+                        <div className="font-semibold text-neutral-900">{t.author?.name}</div>
+                        <div className="text-[10px] font-mono text-neutral-400">
+                          {t.book?.title ? t.book.title : t.author?.authorId || 'General'}
+                        </div>
+                      </td>
+
+                      <td className="py-3.5 px-4 max-w-xs sm:max-w-sm">
+                        <div className="font-medium text-black line-clamp-1">{t.subject}</div>
+                        <div className="text-[11px] text-neutral-500 line-clamp-1">{t.description}</div>
+                      </td>
+
+                      <td className="py-3.5 px-4 font-mono text-[10px] text-neutral-600 whitespace-nowrap">
+                        {t.category?.replace(/_/g, ' ')}
+                      </td>
+
+                      <td className="py-3.5 px-4 font-mono text-[10px] whitespace-nowrap">
+                        <span
+                          className={`px-2 py-0.5 rounded-full ${
+                            t.priority === 'CRITICAL'
+                              ? 'bg-black text-white font-bold'
+                              : t.priority === 'HIGH'
+                              ? 'bg-neutral-800 text-white'
+                              : t.priority === 'MEDIUM'
+                              ? 'border border-neutral-300 text-neutral-800'
+                              : 'text-neutral-400'
+                          }`}
+                        >
+                          {t.priority}
+                        </span>
+                        {t.isPriorityOverridden && <span className="text-neutral-400 ml-1">*</span>}
+                      </td>
+
+                      <td className="py-3.5 px-4 font-mono text-[10px] uppercase whitespace-nowrap">
+                        <span
+                          className={`px-2 py-0.5 rounded-full ${
+                            t.status === 'OPEN'
+                              ? 'border border-black font-semibold text-black'
+                              : t.status === 'IN_PROGRESS'
+                              ? 'bg-neutral-100 text-neutral-800'
+                              : 'text-neutral-500'
+                          }`}
+                        >
+                          {t.status}
+                        </span>
+                      </td>
+
+                      <td className="py-3.5 px-4 text-right whitespace-nowrap font-mono text-[11px] text-neutral-400 hover:text-black">
+                        Inspect &rarr;
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
