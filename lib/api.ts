@@ -1,5 +1,6 @@
 export const API_BASE =
-  process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+  process.env.NEXT_PUBLIC_API_URL ||
+  'https://bookleaf-server-kq8x.onrender.com/api';
 
 export function getStoredToken(): string | null {
   if (typeof window === 'undefined') return null;

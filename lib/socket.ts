@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 
 const WS_URL =
-  process.env.NEXT_PUBLIC_WS_URL || 'http://localhost:4000/events';
+  process.env.NEXT_PUBLIC_WS_URL ||
+  'https://bookleaf-server-kq8x.onrender.com/events';
 
 let socketInstance: Socket | null = null;
 
@@ -72,7 +73,7 @@ export function useRealtime(
     // Also support fallback Server-Sent Events stream
     let eventSource: EventSource | null = null;
     try {
-      const sseUrl = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'}/realtime/stream`;
+      const sseUrl = `${process.env.NEXT_PUBLIC_API_URL || 'https://bookleaf-server-kq8x.onrender.com/api'}/realtime/stream`;
       eventSource = new EventSource(sseUrl);
       eventSource.onmessage = (e) => {
         try {
