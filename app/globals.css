@@ -1,48 +1,78 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
-  --card: #ffffff;
-  --card-foreground: #0f172a;
-  --primary: #1a365d;
-  --primary-foreground: #ffffff;
-  --accent: #d97706;
-  --accent-foreground: #ffffff;
-  --muted: #f1f5f9;
-  --muted-foreground: #64748b;
-  --border: #e2e8f0;
+  --canvas: #faf9f5;
+  --surface: #ffffff;
+  --ledger: #f3f1eb;
+  --ink-primary: #111827;
+  --ink-body: #374151;
+  --ink-muted: #6b7280;
+  --border: #e7e5df;
+  --primary-navy: #0f2537;
+  --gold-leaf: #b4691b;
+  --gold-leaf-bg: #fef8ee;
+  --ledger-emerald: #15803d;
+  --urgent-terracotta: #be123c;
 }
 
-/* Force light mode only */
+/* Enforce strict light mode */
 html, body {
-  background-color: #f8fafc;
-  color: #0f172a;
+  background-color: var(--canvas);
+  color: var(--ink-primary);
   color-scheme: light;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Custom scrollbars for clean UI */
+/* Custom literary serif & ledger styles */
+.font-serif {
+  font-family: "Georgia", "Cambria", "Times New Roman", serif;
+}
+
+.font-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Tactile paper shadow & borders */
+.shadow-paper {
+  box-shadow: 0 1px 3px rgba(15, 37, 55, 0.04), 0 4px 12px rgba(15, 37, 55, 0.03);
+}
+
+.shadow-paper-hover:hover {
+  box-shadow: 0 4px 6px rgba(15, 37, 55, 0.06), 0 10px 24px rgba(15, 37, 55, 0.05);
+}
+
+/* Book spine depth effect */
+.book-spine-effect {
+  position: relative;
+}
+.book-spine-effect::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 5px;
+  background: linear-gradient(to right, rgba(0,0,0,0.15), rgba(0,0,0,0.02) 80%, transparent);
+  border-top-left-radius: inherit;
+  border-bottom-left-radius: inherit;
+  pointer-events: none;
+}
+
+/* Custom subtle scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #f3f1eb;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #d6d3cb;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
-
-@keyframes pulseSubtle {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
-}
-
-.animate-pulse-subtle {
-  animation: pulseSubtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  background: #a8a29e;
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { X, Send, Paperclip, BookOpen, AlertCircle, Sparkles } from 'lucide-react';
+import { X, Send, Paperclip, BookOpen, AlertCircle, Sparkles, Feather, Check } from 'lucide-react';
 import { api } from '../lib/api';
 
 interface Props {
@@ -25,7 +25,7 @@ export const SubmitTicketModal: React.FC<Props> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!subject.trim() || !description.trim()) {
-      setError('Please fill in both subject and description.');
+      setError('Please provide both an inquiry subject and a detailed description.');
       return;
     }
 
@@ -43,7 +43,7 @@ export const SubmitTicketModal: React.FC<Props> = ({
       onTicketCreated();
       onClose();
     } catch (err: any) {
-      setError(err.message || 'Failed to submit ticket');
+      setError(err.message || 'Failed to submit inquiry');
     } finally {
       setSubmitting(false);
     }
@@ -56,22 +56,28 @@ export const SubmitTicketModal: React.FC<Props> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-white rounded-3xl border border-slate-200 shadow-2xl w-full max-w-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 z-50 bg-[#1b2a4a]/45 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+      <div className="bg-[#faf9f5] rounded-2xl border border-[#e5dfd3] shadow-2xl w-full max-w-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50/60">
-          <div>
-            <h3 className="text-base font-serif font-bold text-slate-900">
-              Submit Support Query
-            </h3>
-            <p className="text-xs text-slate-500">
-              Your ticket will be auto-classified by AI and routed immediately.
-            </p>
+        <div className="px-6 py-5 border-b border-[#e5dfd3] flex items-center justify-between bg-white">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-[#1b2a4a]/5 border border-[#1b2a4a]/10 flex items-center justify-center text-[#1b2a4a]">
+              <Feather className="w-5 h-5 text-[#d4af37]" />
+            </div>
+            <div>
+              <h3 className="text-base font-serif font-bold text-[#1b2a4a]">
+                Submit Author Inquiry
+              </h3>
+              <p className="text-xs text-[#737373]">
+                Direct correspondence to the BookLeaf Publishing operations team.
+              </p>
+            </div>
           </div>
 
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full hover:bg-slate-200 text-slate-400 hover:text-slate-700 flex items-center justify-center transition cursor-pointer"
+            className="w-8 h-8 rounded-full hover:bg-[#faf9f5] text-[#737373] hover:text-[#1b2a4a] border border-transparent hover:border-[#e5dfd3] flex items-center justify-center transition cursor-pointer"
+            aria-label="Close dialog"
           >
             <X className="w-5 h-5" />
           </button>
@@ -80,26 +86,26 @@ export const SubmitTicketModal: React.FC<Props> = ({
         {/* Form Body */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {error && (
-            <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
+            <div className="p-3.5 rounded-xl bg-[#8b263e]/10 border border-[#8b263e]/30 text-[#8b263e] text-xs flex items-center gap-2">
               <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{error}</span>
             </div>
           )}
 
-          {/* Book Selector */}
+          {/* Book / Edition Selector */}
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
-              Select Book / Subject Area
+            <label className="block text-xs font-serif font-semibold text-[#1b2a4a] mb-1.5">
+              Associated Book Edition
             </label>
             <select
               value={bookId}
               onChange={(e) => setBookId(e.target.value)}
-              className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-hidden focus:border-indigo-500 cursor-pointer"
+              className="w-full p-2.5 bg-white border border-[#e5dfd3] rounded-xl text-xs text-[#2b2b2b] focus:outline-hidden focus:border-[#1b2a4a] cursor-pointer"
             >
-              <option value="">General / Account Level Inquiry</option>
+              <option value="">General Account Inquiry (No Specific Book)</option>
               {books.map((b) => (
                 <option key={b.id} value={b.id}>
-                  {b.title} ({b.bookId}) &mdash; {b.status}
+                  {b.title} ({b.bookId}) &mdash; {b.status} &bull; ISBN: {b.isbn || 'Pending'}
                 </option>
               ))}
             </select>
@@ -107,43 +113,43 @@ export const SubmitTicketModal: React.FC<Props> = ({
 
           {/* Subject Line */}
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
-              Subject Line *
+            <label className="block text-xs font-serif font-semibold text-[#1b2a4a] mb-1.5">
+              Inquiry Subject *
             </label>
             <input
               type="text"
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
-              placeholder="e.g. Query regarding Q3 royalty payout calculation"
-              className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-hidden focus:border-indigo-500"
+              placeholder="e.g. Query regarding Q3 royalty distribution threshold"
+              className="w-full p-2.5 bg-white border border-[#e5dfd3] rounded-xl text-xs text-[#2b2b2b] placeholder-[#737373] focus:outline-hidden focus:border-[#1b2a4a]"
               required
             />
           </div>
 
           {/* Detailed Description */}
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
-              Detailed Description *
+            <label className="block text-xs font-serif font-semibold text-[#1b2a4a] mb-1.5">
+              Detailed Inquiry *
             </label>
             <textarea
               rows={5}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Please describe your question or issue in detail. If reporting print defects, ISBN mismatch, or royalty questions, include specific dates or quantities."
-              className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-hidden focus:border-indigo-500"
+              placeholder="Please provide full particulars. If reporting printing flaws or missing ISBN metadata, cite specific batch dates, retailers, or quantities."
+              className="w-full p-3 bg-white border border-[#e5dfd3] rounded-xl text-xs text-[#2b2b2b] placeholder-[#737373] focus:outline-hidden focus:border-[#1b2a4a]"
               required
             />
           </div>
 
           {/* Optional Attachment */}
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
-              Attachment (Optional &mdash; e.g. photo of misprints or sales screenshots)
+            <label className="block text-xs font-serif font-semibold text-[#1b2a4a] mb-1.5">
+              Supporting Documentation (Photographs, Invoices, Proofs)
             </label>
             <div className="flex items-center gap-3">
-              <label className="px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-xs font-medium text-slate-700 transition flex items-center gap-1.5 cursor-pointer">
-                <Paperclip className="w-3.5 h-3.5 text-slate-400" />
-                <span>{attachmentName ? 'Change File' : 'Choose File'}</span>
+              <label className="px-3.5 py-2 rounded-xl border border-[#e5dfd3] bg-white hover:bg-[#faf9f5] text-xs font-medium text-[#2b2b2b] transition flex items-center gap-1.5 cursor-pointer shadow-2xs">
+                <Paperclip className="w-3.5 h-3.5 text-[#d4af37]" />
+                <span>{attachmentName ? 'Replace File' : 'Attach File'}</span>
                 <input
                   type="file"
                   onChange={handleSimulateFileSelect}
@@ -151,26 +157,29 @@ export const SubmitTicketModal: React.FC<Props> = ({
                 />
               </label>
 
-              {attachmentName && (
-                <span className="text-xs text-slate-600 font-medium truncate max-w-xs">
+              {attachmentName ? (
+                <span className="text-xs text-[#1e3a2b] font-mono font-medium truncate max-w-xs flex items-center gap-1">
+                  <Check className="w-3.5 h-3.5" />
                   {attachmentName}
                 </span>
+              ) : (
+                <span className="text-[11px] text-[#737373]">Optional (.pdf, .jpg, .png)</span>
               )}
             </div>
           </div>
 
           {/* Submit Actions */}
-          <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
-            <div className="flex items-center gap-1.5 text-[11px] text-slate-400">
-              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-              <span>Auto-triage enqueued via BullMQ</span>
+          <div className="pt-4 border-t border-[#e5dfd3] flex items-center justify-between">
+            <div className="flex items-center gap-1.5 text-[11px] text-[#737373]">
+              <Sparkles className="w-3.5 h-3.5 text-[#d4af37]" />
+              <span>Durable ingestion &bull; BullMQ async triage</span>
             </div>
 
             <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 rounded-xl text-xs font-medium text-slate-600 hover:bg-slate-100 transition cursor-pointer"
+                className="px-4 py-2 rounded-xl text-xs font-medium text-[#737373] hover:text-[#1b2a4a] hover:bg-white transition cursor-pointer"
               >
                 Cancel
               </button>
@@ -178,10 +187,10 @@ export const SubmitTicketModal: React.FC<Props> = ({
               <button
                 type="submit"
                 disabled={submitting}
-                className="px-5 py-2.5 rounded-xl bg-[#1a365d] hover:bg-[#122844] text-white font-semibold text-xs shadow-xs transition flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                className="px-5 py-2.5 rounded-xl bg-[#1b2a4a] hover:bg-[#122844] text-white font-semibold text-xs shadow-xs transition flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
               >
                 <Send className="w-3.5 h-3.5" />
-                <span>{submitting ? 'Submitting Ticket...' : 'Submit Query'}</span>
+                <span>{submitting ? 'Dispatching...' : 'Dispatch Inquiry'}</span>
               </button>
             </div>
           </div>

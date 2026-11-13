@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import {
-  ShieldCheck,
+  Shield,
   Search,
   Filter,
   AlertTriangle,
@@ -13,6 +13,8 @@ import {
   BookOpen,
   ArrowUpDown,
   RefreshCw,
+  Inbox,
+  Flame,
 } from 'lucide-react';
 
 interface Props {
@@ -34,7 +36,7 @@ export const AdminPortal: React.FC<Props> = ({
   const [priorityFilter, setPriorityFilter] = useState('ALL');
   const [sortByUrgency, setSortByUrgency] = useState(true);
 
-  // Filter & sort logic
+  // Filter & sort
   const filteredTickets = tickets.filter((t) => {
     if (statusFilter !== 'ALL' && t.status !== statusFilter) return false;
     if (categoryFilter !== 'ALL' && t.category !== categoryFilter) return false;
@@ -60,13 +62,11 @@ export const AdminPortal: React.FC<Props> = ({
       };
       const pDiff = (priorityOrder[a.priority] || 3) - (priorityOrder[b.priority] || 3);
       if (pDiff !== 0) return pDiff;
-      // Older unresolved tickets first
       return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
     }
     return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
   });
 
-  // Metric counts
   const totalOpen = tickets.filter((t) => t.status === 'OPEN').length;
   const totalInProgress = tickets.filter((t) => t.status === 'IN_PROGRESS').length;
   const totalUrgent = tickets.filter(
@@ -81,29 +81,29 @@ export const AdminPortal: React.FC<Props> = ({
     switch (priority) {
       case 'CRITICAL':
         return (
-          <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200 flex items-center gap-1 shadow-2xs">
-            <span className="w-1.5 h-1.5 rounded-full bg-rose-600 animate-ping"></span>
+          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-[#ffe4e6] text-[#be123c] border border-[#fecdd3] flex items-center gap-1 shadow-2xs">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#be123c] animate-ping"></span>
             <span>Critical</span>
-            {isOverridden && <span className="text-[10px] text-rose-500">(Override)</span>}
+            {isOverridden && <span className="opacity-80">(Manual)</span>}
           </span>
         );
       case 'HIGH':
         return (
-          <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200 flex items-center gap-1 shadow-2xs">
-            <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-[#fef8ee] text-[#b4691b] border border-[#fae2c0] flex items-center gap-1 shadow-2xs">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#b4691b]"></span>
             <span>High</span>
-            {isOverridden && <span className="text-[10px] text-amber-500">(Override)</span>}
+            {isOverridden && <span className="opacity-80">(Manual)</span>}
           </span>
         );
       case 'MEDIUM':
         return (
-          <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
+          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-semibold uppercase tracking-wider bg-[#f0f4f8] text-[#0f2537] border border-[#d2deeb]">
             Medium
           </span>
         );
       case 'LOW':
         return (
-          <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200">
+          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-semibold uppercase tracking-wider bg-[#f3f1eb] text-[#6b7280] border border-[#e7e5df]">
             Low
           </span>
         );
@@ -116,25 +116,25 @@ export const AdminPortal: React.FC<Props> = ({
     switch (status) {
       case 'OPEN':
         return (
-          <span className="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+          <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-[#f0f4f8] text-[#0f2537] border border-[#d2deeb]">
             Open
           </span>
         );
       case 'IN_PROGRESS':
         return (
-          <span className="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+          <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-[#fef8ee] text-[#b4691b] border border-[#fae2c0]">
             In Progress
           </span>
         );
       case 'RESOLVED':
         return (
-          <span className="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+          <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-[#f2f9f4] text-[#15803d] border border-[#cbe8d5]">
             Resolved
           </span>
         );
       case 'CLOSED':
         return (
-          <span className="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-slate-100 text-slate-700 border border-slate-200">
+          <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-[#f3f1eb] text-[#6b7280] border border-[#e7e5df]">
             Closed
           </span>
         );
@@ -144,73 +144,75 @@ export const AdminPortal: React.FC<Props> = ({
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-      {/* Top Ops Header & Metrics */}
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 bg-[#faf9f5]">
+      {/* Ops Desk Header */}
       <div className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-serif font-bold text-slate-900 flex items-center gap-2">
-              <ShieldCheck className="w-6 h-6 text-indigo-600" />
-              <span>Operations Support Queue</span>
-            </h1>
-            <p className="text-xs text-slate-500 mt-0.5">
-              AI-triaged incoming ticket backlog across all BookLeaf authors
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#0f2537]"></span>
+              <h1 className="text-2xl font-serif font-bold text-[#111827]">
+                Editorial Operations Support Queue
+              </h1>
+            </div>
+            <p className="text-xs text-[#6b7280] mt-0.5 font-sans">
+              Asynchronous BullMQ auto-triage &bull; Valkey on-demand draft generator &bull; Multi-author backlog
             </p>
           </div>
 
           <button
             onClick={onRefresh}
             disabled={isLoading}
-            className="px-3 py-1.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-xs font-medium text-slate-700 transition flex items-center gap-1.5 cursor-pointer"
+            className="px-3.5 py-2 rounded-xl bg-white border border-[#e7e5df] hover:bg-[#f3f1eb] text-xs font-bold font-mono uppercase tracking-wider text-[#374151] transition flex items-center gap-2 cursor-pointer shadow-2xs"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} />
-            <span>Refresh Queue</span>
+            <span>Sync Backlog</span>
           </button>
         </div>
 
-        {/* Metric Cards */}
+        {/* Ledger Metric Cards */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-2xs">
-            <span className="text-[11px] font-medium text-slate-500 block uppercase">Open Queue</span>
-            <span className="text-2xl font-serif font-bold text-blue-700">{totalOpen}</span>
-            <span className="text-[10px] text-slate-400 block">Awaiting response</span>
+          <div className="bg-white rounded-2xl border border-[#e7e5df] p-4 shadow-paper space-y-1">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#6b7280]">Open Queue</span>
+            <div className="text-2xl font-serif font-bold text-[#0f2537]">{totalOpen}</div>
+            <span className="text-[10px] text-[#6b7280] block">Awaiting response</span>
           </div>
 
-          <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-2xs">
-            <span className="text-[11px] font-medium text-slate-500 block uppercase">In Progress</span>
-            <span className="text-2xl font-serif font-bold text-amber-600">{totalInProgress}</span>
-            <span className="text-[10px] text-slate-400 block">Active discussions</span>
+          <div className="bg-white rounded-2xl border border-[#e7e5df] p-4 shadow-paper space-y-1">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#b4691b]">In Progress</span>
+            <div className="text-2xl font-serif font-bold text-[#b4691b]">{totalInProgress}</div>
+            <span className="text-[10px] text-[#6b7280] block">Active author thread</span>
           </div>
 
-          <div className="bg-white rounded-xl border border-rose-200 bg-rose-50/20 p-4 shadow-2xs">
-            <span className="text-[11px] font-semibold text-rose-700 block uppercase flex items-center gap-1">
-              <AlertTriangle className="w-3.5 h-3.5" />
-              <span>Critical &amp; High</span>
+          <div className="bg-[#fff1f2] rounded-2xl border border-[#fecdd3] p-4 shadow-paper space-y-1">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#be123c] flex items-center gap-1">
+              <Flame className="w-3.5 h-3.5" />
+              <span>Critical / High</span>
             </span>
-            <span className="text-2xl font-serif font-bold text-rose-700">{totalUrgent}</span>
-            <span className="text-[10px] text-rose-500 block">Needs immediate review</span>
+            <div className="text-2xl font-serif font-bold text-[#be123c]">{totalUrgent}</div>
+            <span className="text-[10px] text-[#be123c] block">Needs expedited resolution</span>
           </div>
 
-          <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-2xs">
-            <span className="text-[11px] font-medium text-slate-500 block uppercase">Resolved</span>
-            <span className="text-2xl font-serif font-bold text-emerald-700">{totalResolved}</span>
-            <span className="text-[10px] text-slate-400 block">Completed queries</span>
+          <div className="bg-white rounded-2xl border border-[#e7e5df] p-4 shadow-paper space-y-1">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#15803d]">Resolved</span>
+            <div className="text-2xl font-serif font-bold text-[#15803d]">{totalResolved}</div>
+            <span className="text-[10px] text-[#6b7280] block">Settled dispatches</span>
           </div>
         </div>
       </div>
 
       {/* Queue Toolbar: Search & Filters */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs space-y-3">
+      <div className="bg-white rounded-2xl border border-[#e7e5df] p-4 shadow-paper space-y-3">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
           {/* Search bar */}
           <div className="relative lg:col-span-2">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+            <Search className="w-4 h-4 text-[#9ca3af] absolute left-3 top-2.5" />
             <input
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search by ticket #, author, subject, book..."
-              className="w-full pl-9 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-hidden focus:border-indigo-500 focus:bg-white transition"
+              placeholder="Search by ticket #, author, book, issue..."
+              className="w-full pl-9 pr-3 py-1.5 bg-[#faf9f5] border border-[#e7e5df] rounded-xl text-xs focus:outline-hidden focus:border-[#0f2537] focus:bg-white transition"
             />
           </div>
 
@@ -219,7 +221,7 @@ export const AdminPortal: React.FC<Props> = ({
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="w-full py-1.5 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-hidden focus:border-indigo-500 cursor-pointer"
+              className="w-full py-1.5 px-3 bg-[#faf9f5] border border-[#e7e5df] rounded-xl text-xs focus:outline-hidden focus:border-[#0f2537] cursor-pointer"
             >
               <option value="ALL">All Statuses</option>
               <option value="OPEN">Open</option>
@@ -234,7 +236,7 @@ export const AdminPortal: React.FC<Props> = ({
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="w-full py-1.5 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-hidden focus:border-indigo-500 cursor-pointer"
+              className="w-full py-1.5 px-3 bg-[#faf9f5] border border-[#e7e5df] rounded-xl text-xs focus:outline-hidden focus:border-[#0f2537] cursor-pointer"
             >
               <option value="ALL">All Categories</option>
               <option value="ROYALTY_AND_PAYMENTS">Royalty &amp; Payments</option>
@@ -251,7 +253,7 @@ export const AdminPortal: React.FC<Props> = ({
             <select
               value={priorityFilter}
               onChange={(e) => setPriorityFilter(e.target.value)}
-              className="w-full py-1.5 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-hidden focus:border-indigo-500 cursor-pointer"
+              className="w-full py-1.5 px-3 bg-[#faf9f5] border border-[#e7e5df] rounded-xl text-xs focus:outline-hidden focus:border-[#0f2537] cursor-pointer"
             >
               <option value="ALL">All Priorities</option>
               <option value="CRITICAL">Critical</option>
@@ -262,88 +264,88 @@ export const AdminPortal: React.FC<Props> = ({
           </div>
         </div>
 
-        {/* Urgency sorting toggle */}
-        <div className="flex items-center justify-between text-xs pt-1 border-t border-slate-100">
-          <span className="text-slate-500">
-            Showing <strong>{sortedTickets.length}</strong> ticket(s)
+        {/* Urgency Order Switcher */}
+        <div className="flex items-center justify-between text-xs pt-1.5 border-t border-[#f3f1eb]">
+          <span className="text-[#6b7280]">
+            Filtered Backlog: <strong className="text-[#111827]">{sortedTickets.length}</strong> ticket(s)
           </span>
 
           <button
             onClick={() => setSortByUrgency(!sortByUrgency)}
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg font-medium transition cursor-pointer ${
+            className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-mono font-semibold transition cursor-pointer ${
               sortByUrgency
-                ? 'bg-amber-50 text-amber-800 border border-amber-200'
-                : 'bg-slate-100 text-slate-700'
+                ? 'bg-[#fef8ee] text-[#b4691b] border border-[#fae2c0]'
+                : 'bg-[#f3f1eb] text-[#374151]'
             }`}
           >
             <ArrowUpDown className="w-3.5 h-3.5" />
             <span>
               {sortByUrgency
-                ? 'Urgency Order (Critical & Oldest Unresolved First)'
-                : 'Chronological Order (Newest First)'}
+                ? 'URGENCY ORDER (Critical First & Oldest Unresolved)'
+                : 'CHRONOLOGICAL ORDER (Newest First)'}
             </span>
           </button>
         </div>
       </div>
 
-      {/* Ticket Queue List */}
-      <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs divide-y divide-slate-100">
+      {/* Ticket Queue Ledger */}
+      <div className="bg-white rounded-3xl border border-[#e7e5df] overflow-hidden shadow-paper divide-y divide-[#f3f1eb]">
         {sortedTickets.length === 0 ? (
-          <div className="p-12 text-center text-slate-500 space-y-2">
-            <Filter className="w-8 h-8 mx-auto text-slate-300" />
-            <p className="font-medium text-sm">No tickets match the selected filters.</p>
+          <div className="p-12 text-center text-[#6b7280] space-y-2">
+            <Inbox className="w-8 h-8 mx-auto text-[#d6d3cb]" />
+            <p className="font-serif font-bold text-sm text-[#111827]">All clear in this queue slice.</p>
           </div>
         ) : (
           sortedTickets.map((t) => (
             <div
               key={t.id}
               onClick={() => onSelectTicket(t)}
-              className="p-5 hover:bg-slate-50/80 transition cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-4"
+              className="p-5 sm:p-6 hover:bg-[#faf9f5] transition cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-4"
             >
               <div className="space-y-1.5 min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="font-mono text-xs font-bold text-slate-900">
+                  <span className="font-mono text-xs font-bold text-[#111827] px-2 py-0.5 rounded bg-[#f3f1eb] border border-[#e7e5df]">
                     {t.ticketNumber}
                   </span>
                   {getPriorityBadge(t.priority, t.isPriorityOverridden)}
-                  <span className="text-[11px] font-medium px-2 py-0.5 rounded bg-slate-100 text-slate-700">
+                  <span className="text-[10px] font-mono uppercase tracking-wider font-semibold px-2 py-0.5 rounded bg-[#faf9f5] text-[#374151] border border-[#e7e5df]">
                     {t.category?.replace(/_/g, ' ')}
                   </span>
                   {getStatusBadge(t.status)}
                   {t.aiConfidence && (
-                    <span className="text-[10px] text-slate-400 font-mono">
-                      (AI: {Math.round(t.aiConfidence * 100)}%)
+                    <span className="text-[10px] text-[#6b7280] font-mono">
+                      [AI: {Math.round(t.aiConfidence * 100)}%]
                     </span>
                   )}
                 </div>
 
-                <h3 className="text-sm font-bold text-slate-900 line-clamp-1">
+                <h3 className="text-base font-serif font-bold text-[#111827] line-clamp-1">
                   {t.subject}
                 </h3>
 
-                <p className="text-xs text-slate-600 line-clamp-1">
+                <p className="text-xs text-[#4b5563] line-clamp-1 font-sans">
                   {t.description}
                 </p>
 
-                <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 pt-0.5">
-                  <div className="flex items-center gap-1 font-medium text-slate-700">
-                    <User className="w-3.5 h-3.5 text-slate-400" />
+                <div className="flex flex-wrap items-center gap-4 text-xs text-[#6b7280] pt-1">
+                  <div className="flex items-center gap-1.5 font-medium text-[#111827]">
+                    <User className="w-3.5 h-3.5 text-[#b4691b]" />
                     <span>{t.author?.name}</span>
-                    <span className="font-mono text-[10px] text-slate-400">
+                    <span className="font-mono text-[10px] text-[#6b7280]">
                       ({t.author?.authorId || 'AUTH'})
                     </span>
                   </div>
 
                   {t.book?.title && (
-                    <div className="flex items-center gap-1">
-                      <BookOpen className="w-3.5 h-3.5 text-slate-400" />
-                      <span className="truncate max-w-[200px]">
+                    <div className="flex items-center gap-1.5">
+                      <BookOpen className="w-3.5 h-3.5 text-[#0f2537]" />
+                      <span className="truncate max-w-[220px]">
                         <em>{t.book.title}</em>
                       </span>
                     </div>
                   )}
 
-                  <div className="flex items-center gap-1 text-slate-400">
+                  <div className="flex items-center gap-1 text-[#6b7280]">
                     <Clock className="w-3.5 h-3.5" />
                     <span>{new Date(t.createdAt).toLocaleDateString()}</span>
                   </div>
@@ -352,16 +354,16 @@ export const AdminPortal: React.FC<Props> = ({
 
               <div className="flex items-center gap-3 shrink-0 self-end md:self-center">
                 {t.assignedTo ? (
-                  <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
+                  <span className="text-[11px] font-mono font-semibold px-2.5 py-1 rounded-full bg-[#f0f4f8] text-[#0f2537] border border-[#d2deeb]">
                     Assigned: {t.assignedTo.name?.split(' ')[0]}
                   </span>
                 ) : (
-                  <span className="text-xs font-medium px-2 py-1 rounded-full bg-slate-100 text-slate-500">
+                  <span className="text-[11px] font-mono font-medium px-2.5 py-1 rounded-full bg-[#f3f1eb] text-[#6b7280]">
                     Unassigned
                   </span>
                 )}
 
-                <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 hover:bg-slate-200 transition">
+                <div className="w-8 h-8 rounded-full bg-[#f3f1eb] flex items-center justify-center text-[#6b7280] hover:bg-[#e7e5df] transition">
                   <ChevronRight className="w-4 h-4" />
                 </div>
               </div>
